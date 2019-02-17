@@ -83,9 +83,11 @@ public class SnowflakesView extends View {
         {
             snowflakes.get(i).draw(canvas);
         }
-        timer.schedule(new TimerTask() {
+        timer.schedule(new TimerTask()
+        {
             @Override
-            public void run() {
+            public void run()
+            {
                 updateSnowFlakes();
             }
         }, 7000);
