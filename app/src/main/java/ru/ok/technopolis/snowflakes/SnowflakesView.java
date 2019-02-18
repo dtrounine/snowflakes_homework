@@ -49,8 +49,7 @@ public class SnowflakesView extends View {
             return y > height || x > width;
         }
 
-        public void draw(Canvas canvas)
-        {
+        public void draw(Canvas canvas){
             canvas.drawCircle(x,y,snowflake_radius,paint);
             x = x + deltaX;
             y = y + deltaY;
