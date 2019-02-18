@@ -38,7 +38,7 @@ public class FpsIndicatorView extends View implements Handler.Callback {
         super(context, attrs);
         bgPaint.setColor(Color.BLACK);
         textPaint.setTextSize(20 * context.getResources().getDisplayMetrics().density);
-        textPaint.setColor(Color.YELLOW);
+        textPaint.setColor(Color.WHITE);
         textPaint.getTextBounds("WWWW", 0, 3, textBounds);
         startTs = SystemClock.uptimeMillis();
         handler.sendMessage(Message.obtain(handler, MSG_NEXT_FRAME));
