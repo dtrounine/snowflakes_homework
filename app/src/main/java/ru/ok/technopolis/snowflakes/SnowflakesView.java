@@ -19,10 +19,12 @@ public class SnowflakesView extends View {
     private static final Random random = new Random();
     private Paint paint;
     private Snowflake[] snowflakes;
+    private int count;
 
     public SnowflakesView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         initPaint();
+        count = 200;
     }
 
     private void initPaint() {
@@ -36,8 +38,8 @@ public class SnowflakesView extends View {
         return (random.nextInt(max - min) + min) * sign;
     }
 
-    private void createSnowFlakes(int n, int w, int h) {
-        snowflakes = new Snowflake[n];
+    private void createSnowFlakes(int count, int w, int h) {
+        snowflakes = new Snowflake[count];
         for (int i = 0; i < snowflakes.length; i++) {
             snowflakes[i] = new Snowflake(h, w);
         }
@@ -48,13 +50,13 @@ public class SnowflakesView extends View {
             Snowflake s = snowflakes[i];
 
             canvas.drawCircle(s.getX(), s.getY(), s.getR(), paint);
-            s.move();
+            s.move(getHeight(), getWidth());
         }
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        createSnowFlakes(200, w, h);
+        createSnowFlakes(count, w, h);
     }
 
     @Override
@@ -65,15 +67,13 @@ public class SnowflakesView extends View {
 
     class Snowflake {
 
-        private int x, y, r, dx, dy, w, h;
+        private int x, y, r, dx, dy;
 
         Snowflake(int h, int w) {
-            this.w = w;
-            this.h = h;
-            init(false);
+            init(h, w,false);
         }
 
-        private void init(boolean restart) {
+        private void init(int h, int w, boolean restart) {
             x = random.nextInt(w);
             y = restart ? 0 : random.nextInt(h);
             r = calcRandom(5, 15, false);
@@ -93,12 +93,12 @@ public class SnowflakesView extends View {
             return r;
         }
 
-        void move() {
+        void move(int h, int w) {
             if (x < w && y < h) {
                 x += dx;
                 y += dy;
             } else {
-                init(true);
+                init(h, w, true);
             }
         }
     }
