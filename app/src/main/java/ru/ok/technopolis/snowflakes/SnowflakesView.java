@@ -17,13 +17,13 @@ public class SnowflakesView extends View {
 
     private static final int DX_MAX = 8;
     private static final int DY_MIN = 4;
-    private static final int DY_MAX = 8;
+    private static final int DY_MAX = 20;
     private static final int RADIUS_MIN = 2;
-    private static final int RADIUS_MAX = 16;
+    private static final int RADIUS_MAX = 20;
 
     private final Random rand = new Random();
     private final Paint paint = new Paint();
-    private final Snowflake[] snowflakes = new Snowflake[128];
+    private final Snowflake[] snowflakes = new Snowflake[200];
     private int height;
     private int width;
 
