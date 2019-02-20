@@ -16,7 +16,7 @@ import static android.graphics.Color.WHITE;
  */
 public class SnowflakesView extends View {
 
-    private static final Random random = new Random();
+    private final Random random = new Random();
     private Paint paint;
     private Snowflake[] snowflakes;
     private int count;
@@ -33,7 +33,7 @@ public class SnowflakesView extends View {
         paint.setAlpha(200);
     }
 
-    public static int calcRandom(int min, int max, boolean randomSign) {
+    public int calcRandom(int min, int max, boolean randomSign) {
         int sign = (randomSign ? (random.nextBoolean() ? 1 : -1) : 1);
         return (random.nextInt(max - min) + min) * sign;
     }
