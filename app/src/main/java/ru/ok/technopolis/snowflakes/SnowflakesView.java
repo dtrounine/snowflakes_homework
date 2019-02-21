@@ -20,7 +20,7 @@ public class SnowflakesView extends View {
 
     private int width, height;
 
-    private final int OPASITY = 200;
+    private final int OPASITY = 2000;
 
     private final int MAX_RADIUS = 20;
 
@@ -78,7 +78,7 @@ public class SnowflakesView extends View {
 
             snowflake.x += snowflake.speed_x;
             snowflake.y += snowflake.speed_y;
-            if(snowflake.y >= height+snowflake.radius){
+            if(snowflake.y >= height + snowflake.radius){
                 snowflake.y = -snowflake.radius;
                 snowflake.x = random.nextInt(width-snowflake.radius);
             }
@@ -88,9 +88,9 @@ public class SnowflakesView extends View {
                 snowflake.x = random.nextInt(width- snowflake.radius);
             }*/
 
-            if (snowflake.x == -snowflake.radius) {
+            if (snowflake.x <= -snowflake.radius) {
                 snowflake.x = width + snowflake.radius;
-            } else if (snowflake.x == width + snowflake.radius) {
+            } else if (snowflake.x >= width + snowflake.radius) {
                 snowflake.x = - snowflake.radius;
             }
         }
