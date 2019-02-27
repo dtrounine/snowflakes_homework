@@ -16,17 +16,19 @@ import java.util.function.Consumer;
 
 public class SnowflakesView extends View {
 
-    final Paint paint;
-    final Random random;
-    int width, height;
-    ArrayList<Snowflake> snow;
-    int time;
+    private final Paint paint;
+    private final Random random;
+    private int width, height;
+    private ArrayList<Snowflake> snow;
+    private int time;
+    private final Context context;
 
 
     public SnowflakesView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        this.context = context;
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setColor(Color.WHITE);
+        paint.setTextSize(60);
         random = new Random();
         time = Integer.MIN_VALUE;
     }
@@ -40,11 +42,15 @@ public class SnowflakesView extends View {
     }
 
 
-    @TargetApi(Build.VERSION_CODES.N)
     @Override
     protected void onDraw(final Canvas canvas) {
         super.onDraw(canvas);
-        snow.forEach(snowflake -> snowflake.draw(canvas));
+        paint.setColor(Color.WHITE);
+        for (Snowflake snowflake : snow) {
+            snowflake.draw(canvas);
+        }
+        paint.setColor(Color.YELLOW);
+        canvas.drawText("Кол-dо снежинок: " + snow.size(), 20, 100, paint);
         refresh();
         invalidate();
     }
@@ -78,12 +84,12 @@ public class SnowflakesView extends View {
             this.y = y;
             r = random.nextInt(10) + 5;
             alpha = random.nextInt(256) + 16;
-            dy = random.nextInt(4)+2;
+            dy = random.nextInt(4) + 2;
             dx = random.nextInt(6) - 3;
         }
 
         boolean isDone() {
-            return y > height;
+            return y > height + r || x < -r || x > width + r;
         }
 
         void draw(Canvas canvas) {
