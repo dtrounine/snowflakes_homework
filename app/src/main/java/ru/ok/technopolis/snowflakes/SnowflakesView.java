@@ -10,13 +10,15 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class SnowflakesView extends View {
 
     private static final int NUM_FLAKES = 200;
 
-    private Flake[] flakes;
+    private List<SnowFlake> flakes = new ArrayList<>();
     private int windowWidth;
     private int windowHeight;
 
@@ -32,12 +34,10 @@ public class SnowflakesView extends View {
         windowWidth = w;
         windowHeight = h;
 
-        flakes = new Flake[NUM_FLAKES];
-
         for (int i = 0; i < NUM_FLAKES; i++) {
             int x = random.nextInt(windowWidth);
             int y = random.nextInt(windowHeight);
-            flakes[i] = new Flake(x, y);;
+            flakes.add(new SnowFlake(x, y));
         }
 
     }
@@ -49,7 +49,7 @@ public class SnowflakesView extends View {
     }
 
     private void drawFlakes(Canvas canvas) {
-        for (Flake flake : flakes) {
+        for (SnowFlake flake : flakes) {
 
             paint.setColor(Color.WHITE);
             paint.setAlpha(flake.getAlpha());
@@ -64,7 +64,7 @@ public class SnowflakesView extends View {
         }
     }
 
-    private static class Flake {
+    private class SnowFlake {
 
         private static final int MIN_WEIGHT = 5;
         private static final int MAX_WEIGHT = 15;
@@ -75,7 +75,6 @@ public class SnowflakesView extends View {
         private static final int MIN_ALPHA = 50;
         private static final int MAX_ALPHA = 255;
 
-
         private int x;
         private int y;
         private int r;
@@ -85,9 +84,7 @@ public class SnowflakesView extends View {
         private int speed;
         private int alpha;
 
-        private final Random random = new Random();
-
-        Flake(int x, int y){
+        SnowFlake(int x, int y){
             this.x = x;
             this.y = y;
             this.r = random.nextInt(5);
