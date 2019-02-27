@@ -1,18 +1,16 @@
 package ru.ok.technopolis.snowflakes;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.os.Build;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Random;
-import java.util.function.Consumer;
 
 public class SnowflakesView extends View {
 
@@ -63,9 +61,15 @@ public class SnowflakesView extends View {
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.N)
     private void deleteSnow() {
-        snow.removeIf(Snowflake::isDone);
+        Iterator<Snowflake> iterator = snow.iterator();
+        while (iterator.hasNext()){
+            Snowflake snowflake = iterator.next();
+            if (snowflake.isDone()) {
+                iterator.remove();
+            }
+
+        }
     }
 
     private void refresh() {
