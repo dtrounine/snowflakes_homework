@@ -16,6 +16,9 @@ public class SnowflakesView extends View {
 
     private final Paint paint;
     private int width, height;
+    private final int MIN_SNOWFLAKES = 250,
+                      MAX_SNOWFLAKES_PER_FRAME = 13,
+                      MIN_SNOWFLAKES_PER_FRAME = 5;
     ArrayList<Snowflake> snowflakes;
 
     public SnowflakesView(Context context, @Nullable AttributeSet attrs) {
@@ -28,11 +31,20 @@ public class SnowflakesView extends View {
     @Override
     protected void onDraw(final Canvas canvas) {
         super.onDraw(canvas);
-        for(Snowflake sf : snowflakes){
-            sf.render(canvas);
+
+        for (Iterator<Snowflake> iterator = snowflakes.iterator(); iterator.hasNext(); ){
+            Snowflake sf = iterator.next();
+            if (sf.isFallen()){
+                iterator.remove();
+            } else {
+                sf.render(canvas);
+            }
         }
-        deleteFallen();
+
         tryCreateSnow();
+
+        canvas.drawText(Integer.toString(snowflakes.size()),10,10,paint); // number of snowflakes on the screen
+
         invalidate();
     }
 
@@ -45,19 +57,19 @@ public class SnowflakesView extends View {
     }
 
     private void tryCreateSnow(){
-        int rnd = getRandomIntRange(-1,1);
-        if (rnd > 0){
-            snowflakes.add(new Snowflake());
+        if (snowflakes.size() <= MIN_SNOWFLAKES){
+            int count = getRandomIntRange(MIN_SNOWFLAKES_PER_FRAME,MAX_SNOWFLAKES_PER_FRAME);
+            for (int i = 0; i < count; i ++){
+                snowflakes.add(new Snowflake());
+            }
         }
     }
 
-    private void deleteFallen(){
-        for (Iterator<Snowflake> iter = snowflakes.iterator(); iter.hasNext(); ){
-            Snowflake sf = iter.next();
-            if (sf.isFallen()){
-                iter.remove();
-            }
+    private static float getRandomFloatRange(float min, float max) {
+        if (min >= max) {
+            throw new IllegalArgumentException("max must be greater than min");
         }
+        return (float) (Math.random() * ((max - min) + 1)) + min;
     }
 
     private static int getRandomIntRange(int min, int max) {
@@ -68,13 +80,13 @@ public class SnowflakesView extends View {
     }
 
     private class Snowflake{
-        private int x,y,dx,dy,radius;
-        public Snowflake(){
-            radius = getRandomIntRange(1, 5);
-            x = getRandomIntRange(radius, width - radius);
+        private float x,y,dx,dy,radius;
+        Snowflake(){
+            radius = getRandomFloatRange(1, 5);
+            x = getRandomFloatRange(radius, width - radius);
             y = 0;
-            dx = getRandomIntRange(-3,3);
-            dy = getRandomIntRange(2,5);
+            dx = getRandomFloatRange(-3,3);
+            dy = getRandomFloatRange(2,4);
         }
         boolean isFallen(){
             return y >= height || x < 0 || x > width;
