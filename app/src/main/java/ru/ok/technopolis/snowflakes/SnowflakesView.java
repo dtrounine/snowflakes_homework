@@ -4,19 +4,13 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.os.Build;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
-/**
- * TODO: Написать код, рисующий падающие снежинки
- */
+
 public class SnowflakesView extends View
 {
 
@@ -25,8 +19,7 @@ public class SnowflakesView extends View
     private Random random;
     private int width;
     private int height;
-    private static final int NUMBER_OF_SNOWFLAKES = 8;
-    private Timer timer;
+    private static final int NUMBER_OF_SNOWFLAKES = 280;
 
     private final class SnowFlake
     {
@@ -45,26 +38,32 @@ public class SnowflakesView extends View
             this.deltaY = random.nextInt(4) + 2;
         }
 
-        public boolean isDisappeared()
+        private boolean isDisappeared()
         {
             return y > height || x > width;
         }
 
-        public void draw(Canvas canvas){
+        private void draw(Canvas canvas){
             canvas.drawCircle(x,y,snowflake_radius,paint);
             x = x + deltaX;
             y = y + deltaY;
+        }
+
+        private void reCreate() {
+            this.snowflake_radius = random.nextInt(8) + 5;
+            x = random.nextInt(width);
+            this.y = 0;
+            this.deltaX =  random.nextInt(6) - 2;
+            this.deltaY = random.nextInt(4) + 2;
         }
     }
 
     public SnowflakesView(Context context, @Nullable AttributeSet attrs)
     {
         super(context, attrs);
-        timer = new Timer();
         paint = new Paint(Color.WHITE);
         paint.setARGB(175, 255, 255, 255);
         random = new Random();
-        snowflakes = new ArrayList<>();
     }
 
     @Override
@@ -72,9 +71,14 @@ public class SnowflakesView extends View
     {
         width = w;
         height = h;
+        snowflakes = new ArrayList<>();
+        for(int i = 0; i < NUMBER_OF_SNOWFLAKES; i++)
+        {
+            snowflakes.add(new SnowFlake(random.nextInt(width), random.nextInt(100)));
+        }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
+
     @Override
     protected void onDraw(Canvas canvas)
     {
@@ -82,25 +86,9 @@ public class SnowflakesView extends View
         for(int i = 0; i < snowflakes.size();i++)
         {
             snowflakes.get(i).draw(canvas);
+            if(snowflakes.get(i).isDisappeared())
+                snowflakes.get(i).reCreate();
         }
-        timer.schedule(new TimerTask()
-        {
-            @Override
-            public void run()
-            {
-                updateSnowFlakes();
-            }
-        }, 7000);
         invalidate();
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    private void updateSnowFlakes()
-    {
-        for(int i = 0; i < NUMBER_OF_SNOWFLAKES; i++)
-        {
-            snowflakes.add(new SnowFlake(random.nextInt(width), 0));
-        }
-        snowflakes.removeIf(SnowFlake::isDisappeared);
     }
 }
