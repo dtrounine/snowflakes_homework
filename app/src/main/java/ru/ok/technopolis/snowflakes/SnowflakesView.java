@@ -7,9 +7,8 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Random;
 
 /**
@@ -20,7 +19,7 @@ public class SnowflakesView extends View {
     private final Paint paint = new Paint();
     private int heightScreen;
     private int widthScreen;
-    private List<Snowflake> snowFlakes = new LinkedList<>();
+    private List<Snowflake> snowFlakes = new ArrayList<>(250);
     private Random random = new Random();
 
     private class Snowflake {
@@ -55,55 +54,43 @@ public class SnowflakesView extends View {
 
     private void initSnowflakes(Canvas canvas) {
         if (snowFlakes.size() == 0) {
-            createSnowflakes(350);
+            for (int i = 0; i < 250; i++) {
+                snowFlakes.add(new Snowflake());
+            }
         }
 
-        if (snowFlakes.size() <= 250) {
-            createSnowflakes(100);
-        }
-        ListIterator<Snowflake> iter = snowFlakes.listIterator();
-        while (iter.hasNext()) {
-            Snowflake s = iter.next();
+        for (Snowflake s: snowFlakes) {
             if (s.dstY == 0) {
                 s.radius = random.nextInt(20) + 5;
                 s.speedY = random.nextInt(15) + 1;
                 switch (random.nextInt(3)) {
                     case 0: s.dstX = random.nextInt(widthScreen - 1) + 1;
-                    s.dstY = 1;
-                    s.speedX = random.nextInt(10) + 1;
-                    if (random.nextInt(2) == 0) {
-                        s.speedX = -s.speedX;
-                    }
-                    break;
+                        s.dstY = 1;
+                        s.speedX = random.nextInt(10) + 1;
+                        if (random.nextInt(2) == 0) {
+                            s.speedX = -s.speedX;
+                        }
+                        break;
                     case 1: s.dstY = random.nextInt( 3 * heightScreen / 4) + 1;
-                    s.dstX = 1;
-                    s.speedX = random.nextInt(10) + 1;
-                    break;
+                        s.dstX = 1;
+                        s.speedX = random.nextInt(10) + 1;
+                        break;
                     case 2: s.dstY = random.nextInt( 3 * heightScreen / 4) + 1;
-                    s.dstX = widthScreen - 1;
-                    s.speedX = -(random.nextInt(10) + 1);
-                    break;
+                        s.dstX = widthScreen - 1;
+                        s.speedX = -(random.nextInt(10) + 1);
+                        break;
                 }
-                iter.set(s);
             }
             else {
                 s.dstX += s.speedX;
                 s.dstY += s.speedY;
                 if (s.dstX > widthScreen || s.dstX < 0 || s.dstY > heightScreen) {
-                    iter.remove();
-                    System.out.println("size: " + snowFlakes.size());
+                    s.dstY = 0;
                 }
                 else {
-                    iter.set(s);
                     canvas.drawCircle(s.dstX, s.dstY, s.radius, paint);
                 }
             }
-        }
-    }
-
-    private void createSnowflakes(int n) {
-        for (int i = 0; i < n; i++) {
-            snowFlakes.add(new Snowflake());
         }
     }
 }
