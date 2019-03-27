@@ -73,20 +73,22 @@ public class SnowflakesView extends View {
             Circle circle = iterator.next();
             circle.setX(circle.x + circle.dx / 2 + random.nextInt(3) - 1);
             circle.setY(circle.y + circle.dy);
-            if (circle.x < -10 || circle.x > width + 10 || circle.y > height + 10) {
-                //Log.d("Remove", "Size - " + snowflakes.size() + " | Remove - " + ++count);
+            if (circle.x < - 2 || circle.x > width + 2 || circle.y > height + 2) {
                 iterator.remove();
             }
         }
 
-        snowflakes.add(
-                new Circle(
-                        random.nextInt(width + 11) - 10,
-                        0,
-                        random.nextInt(8) + 5,
-                        random.nextInt(11) - 5,
-                        random.nextInt(6) + 5));
+        if (snowflakes.size() < 220) {
+            snowflakes.add(
+                    new Circle(
+                            random.nextInt(width + 11) - 10,
+                            0,
+                            random.nextInt(8) + 5,
+                            random.nextInt(11) - 5,
+                            random.nextInt(6) + 5));
+        }
 
+        Log.d("Count", "Size - " + snowflakes.size());
     }
 
     void drawSnow(Canvas canvas) {
