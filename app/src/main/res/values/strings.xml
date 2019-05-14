@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Snowflakes</string>
+    <string name="snowflakes_massive_size">Amount of snowflakes: </string>
 </resources>
